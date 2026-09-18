@@ -14,29 +14,29 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         ref={ref}
         disabled={disabled}
         className={cn(
-          // Base & Emil Kowalski press feedback
-          "inline-flex items-center justify-center font-medium select-none cursor-pointer rounded-lg",
-          "transition-all duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] active:scale-[0.97]",
+          // Apple HIG base & immediate pointer-down feedback
+          "inline-flex items-center justify-center font-medium select-none cursor-pointer rounded-xl",
+          "transition-all duration-120 ease-out active:scale-[0.97]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
-          "disabled:opacity-50 disabled:pointer-events-none disabled:active:scale-100",
+          "disabled:opacity-40 disabled:pointer-events-none disabled:active:scale-100",
           
-          // Variants
+          // Apple Variants
           variant === "primary" &&
-            "bg-primary text-primary-foreground shadow-sm hover:brightness-110",
+            "bg-primary text-primary-foreground shadow-xs hover:opacity-95 active:opacity-90",
           variant === "secondary" &&
             "bg-secondary text-secondary-foreground hover:bg-secondary/80",
           variant === "outline" &&
-            "border border-border bg-background hover:bg-muted text-foreground",
+            "border border-border/80 bg-background/90 hover:bg-secondary/60 text-foreground shadow-xs",
           variant === "ghost" &&
-            "hover:bg-muted text-foreground",
+            "hover:bg-secondary/60 text-foreground",
           variant === "destructive" &&
-            "bg-destructive text-destructive-foreground hover:brightness-110",
+            "bg-destructive text-destructive-foreground hover:opacity-95 active:opacity-90 shadow-xs",
 
           // Sizes
-          size === "sm" && "h-8 px-3 text-xs gap-1.5",
-          size === "md" && "h-10 px-4 text-sm gap-2",
-          size === "lg" && "h-12 px-6 text-base gap-2.5",
-          size === "icon" && "h-9 w-9 p-0 text-sm",
+          size === "sm" && "h-8 px-3 text-xs gap-1.5 rounded-lg",
+          size === "md" && "h-9.5 px-4 text-sm gap-2",
+          size === "lg" && "h-11 px-5 text-base gap-2.5 rounded-2xl",
+          size === "icon" && "h-8.5 w-8.5 p-0 text-sm",
 
           className
         )}

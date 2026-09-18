@@ -10,7 +10,6 @@ import {
   DialogDescription,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { AlertTriangle } from "lucide-react";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -40,25 +39,21 @@ export function ConfirmDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md">
+      <DialogContent className="max-w-sm rounded-2xl p-5 sm:p-6 text-center sm:text-left">
         <DialogHeader>
-          <div className="flex items-center gap-3 mb-1">
-            {variant === "destructive" && (
-              <div className="h-9 w-9 rounded-full bg-destructive/10 text-destructive flex items-center justify-center shrink-0">
-                <AlertTriangle className="h-4 w-4" />
-              </div>
-            )}
-            <DialogTitle>{title}</DialogTitle>
-          </div>
-          <DialogDescription>{description}</DialogDescription>
+          <DialogTitle className="text-base font-semibold">{title}</DialogTitle>
+          <DialogDescription className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
+            {description}
+          </DialogDescription>
         </DialogHeader>
 
-        <DialogFooter className="mt-4">
+        <DialogFooter className="mt-5 gap-2">
           <Button
             type="button"
-            variant="outline"
+            variant="secondary"
             size="sm"
             onClick={() => onOpenChange(false)}
+            className="w-full sm:w-auto"
           >
             {cancelText}
           </Button>
@@ -67,6 +62,7 @@ export function ConfirmDialog({
             variant={variant === "destructive" ? "destructive" : "primary"}
             size="sm"
             onClick={handleConfirm}
+            className="w-full sm:w-auto"
           >
             {confirmText}
           </Button>

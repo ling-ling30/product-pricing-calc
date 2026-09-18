@@ -128,20 +128,20 @@ export default function ProductCalculatorPage() {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col justify-between selection:bg-accent/20">
-      {/* Top Navigation Bar */}
-      <header className="sticky top-0 z-40 w-full border-b border-border/80 bg-background/95 backdrop-blur-md">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+    <div className="min-h-screen bg-background flex flex-col justify-between selection:bg-primary/10">
+      {/* Apple Translucent Top Navigation Bar */}
+      <header className="sticky top-0 z-40 w-full border-b border-border/40 apple-glass">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 h-15 flex items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="h-9 w-9 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-sm">
-              <Calculator className="h-5 w-5" />
+            <div className="h-8.5 w-8.5 rounded-xl bg-primary text-primary-foreground flex items-center justify-center shadow-xs">
+              <Calculator className="h-4.5 w-4.5" />
             </div>
             <div>
-              <h1 className="text-base font-bold tracking-tight text-foreground">
-                Product Price Calculator
+              <h1 className="text-sm font-semibold tracking-tight text-foreground">
+                Product Calculator
               </h1>
               <p className="text-xs text-muted-foreground hidden sm:block">
-                Dynamic cost waterfall, subtotal percentages, yield loss, and profit margin analysis.
+                Build your price step by step.
               </p>
             </div>
           </div>
@@ -152,10 +152,10 @@ export default function ProductCalculatorPage() {
         </div>
       </header>
 
-      {/* Main App Workspace */}
-      <main className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-1">
+      {/* Main Workspace */}
+      <main className="max-w-6xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-7 flex-1">
         <div className="space-y-6">
-          {/* Preset Manager Toolbar */}
+          {/* Saved Products Toolbar */}
           <PresetManagerBar
             presets={presetsData || []}
             activePresetId={activePresetId}
@@ -171,8 +171,8 @@ export default function ProductCalculatorPage() {
 
           {/* Dual-Column Responsive Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-            {/* Left Column: Component Builder (7 cols) */}
-            <div className="lg:col-span-7 bg-card/60 p-5 md:p-6 rounded-2xl border border-border shadow-sm">
+            {/* Left Column: Cost Items Builder (7 cols) */}
+            <div className="lg:col-span-7 bg-card p-5 sm:p-6 rounded-2xl border border-border/70 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
               <PricingComponentList
                 components={components}
                 lines={summary.lines}
@@ -181,8 +181,8 @@ export default function ProductCalculatorPage() {
               />
             </div>
 
-            {/* Right Column: Hero Price & Waterfall (5 cols) */}
-            <div className="lg:col-span-5 space-y-6 sticky top-24">
+            {/* Right Column: Hero Selling Price & Breakdown (5 cols) */}
+            <div className="lg:col-span-5 space-y-6 lg:sticky lg:top-21">
               <PriceSummaryHero
                 summary={summary}
                 currency={currency}
@@ -200,11 +200,11 @@ export default function ProductCalculatorPage() {
         </div>
       </main>
 
-      {/* Minimal Clean Footer */}
-      <footer className="w-full border-t border-border/60 py-4 mt-12 bg-card/20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs text-muted-foreground">
-          <span>Product Price & Margin Calculator</span>
-          <span>Configurable cost build-up</span>
+      {/* Quiet, Minimalist Footer */}
+      <footer className="w-full border-t border-border/40 py-5 mt-10">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-muted-foreground">
+          <span>Product Calculator</span>
+          <span>Clear, confident pricing</span>
         </div>
       </footer>
     </div>

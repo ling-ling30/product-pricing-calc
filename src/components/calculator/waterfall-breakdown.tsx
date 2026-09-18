@@ -21,9 +21,8 @@ export function WaterfallBreakdown({
   const [copied, setCopied] = useState(false);
 
   const handleCopyQuote = () => {
-    let text = `========================================\n`;
-    text += `COMMERCIAL PRICE QUOTE & BREAKDOWN\n`;
-    text += `========================================\n\n`;
+    let text = `Price Breakdown\n`;
+    text += `----------------------------------------\n`;
 
     summary.lines.forEach((line, idx) => {
       if (line.enabled) {
@@ -34,40 +33,31 @@ export function WaterfallBreakdown({
       }
     });
 
-    text += `\n----------------------------------------\n`;
-    text += `Total Cost: ${formatCurrency(summary.totalCost, currency)}\n`;
-    text += `FINAL SELLING PRICE: ${formatCurrency(
-      summary.finalSellPrice,
-      currency
-    )}\n`;
-    text += `Net Commercial Profit: ${formatCurrency(
-      summary.netProfit,
-      currency
-    )} (${formatPercent(summary.grossMarginPct)} Margin / ${formatPercent(
-      summary.markupPct
-    )} Markup)\n`;
-    text += `========================================\n`;
+    text += `----------------------------------------\n`;
+    text += `Total Cost:    ${formatCurrency(summary.totalCost, currency)}\n`;
+    text += `Selling Price: ${formatCurrency(summary.finalSellPrice, currency)}\n`;
+    text += `Profit:        ${formatCurrency(summary.netProfit, currency)} (${formatPercent(
+      summary.grossMarginPct
+    )} Margin)\n`;
 
     navigator.clipboard.writeText(text);
     setCopied(true);
-    toast.success("Price breakdown copied to clipboard", {
-      description: "Formatted commercial quote ready to paste.",
-    });
+    toast.success("Breakdown copied to clipboard");
     setTimeout(() => setCopied(false), 2000);
   };
 
   const finalTotal = summary.finalSellPrice || 1;
 
   return (
-    <Card className="border-border shadow-sm">
+    <Card className="border-border/70 shadow-[0_2px_12px_rgba(0,0,0,0.02)]">
       <CardHeader className="flex flex-row items-center justify-between pb-3">
         <div>
-          <CardTitle className="text-base flex items-center gap-2">
+          <CardTitle className="text-sm font-semibold flex items-center gap-2">
             <Layers className="h-4 w-4 text-primary" />
-            Cost Waterfall & Build-up
+            Cost Breakdown
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Step-by-step contribution to final selling price.
+            See how your price is built.
           </p>
         </div>
 
@@ -75,38 +65,38 @@ export function WaterfallBreakdown({
           variant="outline"
           size="sm"
           onClick={handleCopyQuote}
-          className="text-xs"
+          className="text-xs font-normal"
         >
           {copied ? (
             <>
               <Check className="h-3.5 w-3.5 mr-1 text-emerald-600" />
-              Copied!
+              Copied
             </>
           ) : (
             <>
               <Copy className="h-3.5 w-3.5 mr-1" />
-              Copy Price Breakdown
+              Copy
             </>
           )}
         </Button>
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {/* Waterfall Stacked Bar */}
+        {/* Apple Harmonious Stacked Bar */}
         <div className="space-y-1.5">
-          <div className="h-3 w-full rounded-full bg-secondary overflow-hidden flex shadow-inner">
+          <div className="h-2.5 w-full rounded-full bg-secondary/80 overflow-hidden flex">
             {summary.lines
               .filter((l) => l.enabled && l.monetaryValue > 0)
               .map((line, idx) => {
                 const pctOfTotal = (line.monetaryValue / finalTotal) * 100;
+                // Apple palette: soft indigo, blue, teal, emerald, amber
                 const colors = [
-                  "bg-amber-700 dark:bg-amber-600",
-                  "bg-amber-600 dark:bg-amber-500",
+                  "bg-blue-600 dark:bg-blue-500",
+                  "bg-indigo-500 dark:bg-indigo-400",
+                  "bg-teal-500 dark:bg-teal-400",
+                  "bg-sky-500 dark:bg-sky-400",
+                  "bg-emerald-500 dark:bg-emerald-400",
                   "bg-amber-500 dark:bg-amber-400",
-                  "bg-stone-500 dark:bg-stone-400",
-                  "bg-stone-400 dark:bg-stone-500",
-                  "bg-emerald-600 dark:bg-emerald-500",
-                  "bg-teal-600 dark:bg-teal-500",
                 ];
                 const bg = colors[idx % colors.length];
 
@@ -123,14 +113,14 @@ export function WaterfallBreakdown({
                 );
               })}
           </div>
-          <div className="flex justify-between text-[10px] text-muted-foreground tabular-nums">
-            <span>Direct Cost Basis: {formatCurrency(summary.totalCost, currency)}</span>
-            <span>Final Quote: {formatCurrency(summary.finalSellPrice, currency)}</span>
+          <div className="flex justify-between text-[11px] text-muted-foreground tabular-nums">
+            <span>Cost: {formatCurrency(summary.totalCost, currency)}</span>
+            <span>Price: {formatCurrency(summary.finalSellPrice, currency)}</span>
           </div>
         </div>
 
         {/* Breakdown Line Items */}
-        <div className="divide-y divide-border/60 text-xs">
+        <div className="divide-y divide-border/40 text-xs">
           {summary.lines.map((line) => {
             const pct = (line.monetaryValue / finalTotal) * 100;
             const isProfitComponent =
@@ -139,18 +129,18 @@ export function WaterfallBreakdown({
             return (
               <div
                 key={line.componentId}
-                className={`py-2.5 flex items-center justify-between gap-3 ${
-                  line.enabled ? "" : "opacity-40 italic"
+                className={`py-2 flex items-center justify-between gap-3 ${
+                  line.enabled ? "" : "opacity-40"
                 }`}
               >
                 <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-1.5">
                     <span className="font-medium text-foreground truncate">
                       {line.name}
                     </span>
                     <Badge
                       variant={isProfitComponent ? "success" : "secondary"}
-                      className="text-[9px] px-1.5 py-0"
+                      className="text-[9px] px-1.5 py-0 rounded-md"
                     >
                       {line.type === "fixed"
                         ? "Fixed"
@@ -159,8 +149,8 @@ export function WaterfallBreakdown({
                         : line.type === "pct_component"
                         ? "% Item"
                         : line.type === "margin"
-                        ? "Margin %"
-                        : "Markup %"}
+                        ? "Margin"
+                        : "Markup"}
                     </Badge>
                   </div>
                   {line.referenceDetail && line.enabled && (
@@ -172,9 +162,9 @@ export function WaterfallBreakdown({
 
                 <div className="text-right whitespace-nowrap">
                   <div
-                    className={`font-semibold tabular-nums font-mono ${
+                    className={`font-medium tabular-nums font-mono ${
                       isProfitComponent
-                        ? "text-emerald-700 dark:text-emerald-400"
+                        ? "text-emerald-600 dark:text-emerald-400 font-semibold"
                         : "text-foreground"
                     }`}
                   >
@@ -184,12 +174,12 @@ export function WaterfallBreakdown({
                         {formatCurrency(line.monetaryValue, currency)}
                       </>
                     ) : (
-                      "Excluded"
+                      "Off"
                     )}
                   </div>
                   {line.enabled && (
                     <div className="text-[10px] text-muted-foreground tabular-nums">
-                      {pct.toFixed(1)}% of quote
+                      {pct.toFixed(1)}% of price
                     </div>
                   )}
                 </div>

@@ -53,7 +53,7 @@ export function PricingComponentList({
   ) => {
     const newComponent: PricingComponent = {
       id: `c-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      name: preset?.name || "New Cost Item",
+      name: preset?.name || "New Item",
       type: preset?.type || "fixed",
       value: preset?.value ?? (preset?.type === "margin" ? 20 : 10),
       targetComponentId: preset?.targetComponentId,
@@ -68,12 +68,12 @@ export function PricingComponentList({
     const previous = [...components];
     onChange([]);
     setIsResetConfirmOpen(false);
-    toast.info("All components cleared", {
+    toast.info("Cleared all items", {
       action: {
         label: "Undo",
         onClick: () => {
           onChange(previous);
-          toast.success("Restored components");
+          toast.success("Restored items");
         },
       },
     });
@@ -87,15 +87,15 @@ export function PricingComponentList({
       <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-border/60">
         <div>
           <div className="flex items-center gap-2">
-            <h2 className="text-base font-bold tracking-tight text-foreground">
-              Cost & Margin Components
+            <h2 className="text-base font-semibold tracking-tight text-foreground">
+              Costs & Margin
             </h2>
             <span className="text-xs text-muted-foreground font-mono tabular-nums px-2 py-0.5 rounded-full bg-secondary">
               {activeCount} active
             </span>
           </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Configure direct raw materials, process shrinkage/loss, packaging, and commercial margins.
+            Add your materials, labor, fees, and profit margin.
           </p>
         </div>
 
@@ -105,7 +105,7 @@ export function PricingComponentList({
               variant="ghost"
               size="sm"
               onClick={() => setIsResetConfirmOpen(true)}
-              title="Clear all components"
+              title="Clear all"
               className="text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
             >
               <RotateCcw className="h-3.5 w-3.5 mr-1" />
@@ -117,61 +117,61 @@ export function PricingComponentList({
             variant="primary"
             size="sm"
             onClick={() => handleAddComponent()}
-            className="shadow-sm font-medium"
+            className="shadow-xs font-medium"
           >
             <Plus className="h-4 w-4 mr-1" />
-            Add Component
+            Add Item
           </Button>
         </div>
       </div>
 
-      {/* Quick Starter Templates */}
-      <div className="flex flex-wrap items-center gap-1.5 p-2 rounded-xl bg-secondary/40 border border-border/60">
+      {/* Quick Starter Suggestions */}
+      <div className="flex flex-wrap items-center gap-1.5 p-2 rounded-xl bg-secondary/50 border border-border/50">
         <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1 mr-1">
-          <Sparkles className="h-3 w-3 text-accent" />
-          Quick insert:
+          <Sparkles className="h-3 w-3 text-primary" />
+          Quick add:
         </span>
         <button
           type="button"
           onClick={() =>
             handleAddComponent({
-              name: "Raw Material Basis",
+              name: "Raw Material",
               type: "fixed",
-              value: currency === "IDR" ? 170000 : 100,
+              value: currency === "IDR" ? 150000 : 80,
               category: "material",
             })
           }
-          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border/80 text-foreground transition-all duration-160 active:scale-95 font-medium"
+          className="text-xs px-2.5 py-1 rounded-lg bg-card hover:bg-secondary border border-border/60 text-foreground transition-all duration-120 active:scale-95 font-medium"
         >
-          + Raw Material
+          + Material
         </button>
         <button
           type="button"
           onClick={() => {
             const firstMaterial = components.find((c) => c.category === "material") || components[0];
             handleAddComponent({
-              name: "Processing Shrinkage / Waste",
+              name: "Waste & Loss",
               type: "pct_component",
-              value: 15,
+              value: 10,
               targetComponentId: firstMaterial?.id,
               category: "overhead",
             });
           }}
-          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border/80 text-foreground transition-all duration-160 active:scale-95 font-medium"
+          className="text-xs px-2.5 py-1 rounded-lg bg-card hover:bg-secondary border border-border/60 text-foreground transition-all duration-120 active:scale-95 font-medium"
         >
-          + Shrinkage (% of Item)
+          + Waste / Loss
         </button>
         <button
           type="button"
           onClick={() =>
             handleAddComponent({
-              name: "Packaging & Bagging",
+              name: "Packaging",
               type: "fixed",
-              value: currency === "IDR" ? 8000 : 0.85,
+              value: currency === "IDR" ? 5000 : 1.5,
               category: "material",
             })
           }
-          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border/80 text-foreground transition-all duration-160 active:scale-95 font-medium"
+          className="text-xs px-2.5 py-1 rounded-lg bg-card hover:bg-secondary border border-border/60 text-foreground transition-all duration-120 active:scale-95 font-medium"
         >
           + Packaging
         </button>
@@ -179,34 +179,34 @@ export function PricingComponentList({
           type="button"
           onClick={() =>
             handleAddComponent({
-              name: "Logistics & Forwarder",
+              name: "Shipping & Handling",
               type: "fixed",
-              value: currency === "IDR" ? 35000 : 1.8,
+              value: currency === "IDR" ? 25000 : 2.5,
               category: "logistics",
             })
           }
-          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border/80 text-foreground transition-all duration-160 active:scale-95 font-medium"
+          className="text-xs px-2.5 py-1 rounded-lg bg-card hover:bg-secondary border border-border/60 text-foreground transition-all duration-120 active:scale-95 font-medium"
         >
-          + Logistics
+          + Shipping
         </button>
         <button
           type="button"
           onClick={() =>
             handleAddComponent({
-              name: "Commercial Target Margin",
+              name: "Target Profit",
               type: "margin",
               value: 20,
               category: "profit",
             })
           }
-          className="text-xs px-2.5 py-1 rounded-md bg-accent/15 hover:bg-accent/25 border border-accent/30 text-accent font-semibold transition-all duration-160 active:scale-95"
+          className="text-xs px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/15 border border-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-semibold transition-all duration-120 active:scale-95"
         >
-          + 20% Margin
+          + 20% Profit
         </button>
       </div>
 
-      {/* Component Rows List */}
-      <div className="space-y-3">
+      {/* Item Rows */}
+      <div className="space-y-2.5">
         {components.map((comp, idx) => (
           <PricingComponentRow
             key={comp.id}
@@ -221,40 +221,40 @@ export function PricingComponentList({
         ))}
 
         {components.length === 0 && (
-          <div className="py-12 px-6 text-center rounded-2xl border border-dashed border-border/80 bg-card/30 space-y-3">
-            <div className="w-10 h-10 mx-auto rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+          <div className="py-12 px-6 text-center rounded-2xl border border-dashed border-border bg-secondary/20 space-y-3">
+            <div className="w-10 h-10 mx-auto rounded-full bg-primary/10 text-primary flex items-center justify-center">
               <Plus className="h-5 w-5" />
             </div>
             <div>
               <h3 className="text-sm font-semibold text-foreground">
-                Start with a fresh product calculation
+                No costs added yet
               </h3>
               <p className="text-xs text-muted-foreground mt-0.5 max-w-sm mx-auto">
-                Add your direct material costs, processing percentages, logistics, or target margins to begin.
+                Start by adding your first cost item below, like materials, labor, or packaging.
               </p>
             </div>
             <div className="pt-2">
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => handleAddComponent({ name: "Base Material", type: "fixed", value: 100 })}
-                className="shadow-sm"
+                onClick={() => handleAddComponent({ name: "Base Material", type: "fixed", value: 50 })}
+                className="shadow-xs"
               >
                 <Plus className="h-4 w-4 mr-1.5" />
-                Add First Component
+                Add First Cost
               </Button>
             </div>
           </div>
         )}
       </div>
 
-      {/* Proper Radix Confirmation Dialog for Clear/Reset */}
+      {/* Confirmation Modal */}
       <ConfirmDialog
         open={isResetConfirmOpen}
         onOpenChange={setIsResetConfirmOpen}
-        title="Clear All Components?"
-        description="This will remove all pricing components from the current session. You can undo this action immediately from the notification."
-        confirmText="Clear Canvas"
+        title="Clear All Items?"
+        description="This will remove all costs from your current calculation. You can undo this right after if you change your mind."
+        confirmText="Clear"
         variant="destructive"
         onConfirm={handleConfirmReset}
       />

@@ -4,70 +4,70 @@
 
 @layer base {
   :root {
-    --background: 40 25% 98%;      /* Warm cream #FAF9F6 */
-    --foreground: 24 10% 12%;      /* Deep charcoal #201D1A */
+    --background: 240 5% 97%;      /* Apple Clean #F5F5F7 */
+    --foreground: 240 6% 12%;      /* Apple SF Pro Deep Charcoal #1D1D1F */
 
-    --card: 0 0% 100%;             /* Crisp white */
-    --card-foreground: 24 10% 12%;
+    --card: 0 0% 100%;             /* Pure White Surface */
+    --card-foreground: 240 6% 12%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 24 10% 12%;
+    --popover-foreground: 240 6% 12%;
 
-    --primary: 24 75% 26%;         /* Espresso roast #743311 */
-    --primary-foreground: 40 33% 98%;
+    --primary: 211 100% 45%;       /* Apple System Blue #0071E3 */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 35 25% 94%;       /* Warm subtle stone #F3EFEA */
-    --secondary-foreground: 24 10% 15%;
+    --secondary: 240 5% 93%;       /* Soft Apple Slate #ECECEE */
+    --secondary-foreground: 240 6% 18%;
 
-    --muted: 35 20% 95%;
-    --muted-foreground: 24 8% 46%;
+    --muted: 240 4% 94%;
+    --muted-foreground: 240 4% 46%; /* Apple Secondary Text #86868B */
 
-    --accent: 30 85% 42%;          /* Warm copper #C66810 */
+    --accent: 211 100% 45%;        /* Apple Interactive Blue */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 51%;
+    --destructive: 355 85% 54%;    /* Apple Red #FF3B30 */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 35 15% 88%;          /* Crisp light border */
-    --input: 35 15% 86%;
-    --ring: 24 75% 26%;
+    --border: 240 5% 89%;          /* Apple Subtle Border */
+    --input: 240 5% 88%;
+    --ring: 211 100% 45%;
 
-    --radius: 0.625rem;
+    --radius: 0.875rem;            /* Apple 14px rounded corners */
 
-    /* Emil Kowalski custom motion curves */
+    /* Apple fluid interface motion curves */
+    --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
-    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
-    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
   }
 
   .dark {
-    --background: 24 14% 9%;       /* Rich obsidian #181513 */
-    --foreground: 40 25% 94%;
+    --background: 0 0% 0%;         /* Apple Pure OLED Black #000000 */
+    --foreground: 0 0% 96%;        /* Apple Light Text #F5F5F7 */
 
-    --card: 24 14% 12%;            /* Deep card surface #231E1A */
-    --card-foreground: 40 25% 94%;
+    --card: 240 5% 10%;            /* Apple Deep Gray Surface #1C1C1E */
+    --card-foreground: 0 0% 96%;
 
-    --popover: 24 14% 12%;
-    --popover-foreground: 40 25% 94%;
+    --popover: 240 5% 10%;
+    --popover-foreground: 0 0% 96%;
 
-    --primary: 30 75% 58%;         /* Warm roasted caramel #E88E40 */
-    --primary-foreground: 24 14% 8%;
+    --primary: 211 100% 58%;       /* Apple Dark Mode Blue #2997FF */
+    --primary-foreground: 0 0% 0%;
 
-    --secondary: 24 12% 18%;
-    --secondary-foreground: 40 25% 90%;
+    --secondary: 240 4% 16%;       /* Apple Dark Secondary #2C2C2E */
+    --secondary-foreground: 0 0% 92%;
 
-    --muted: 24 12% 16%;
-    --muted-foreground: 35 12% 62%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 4% 60%; /* Apple Dark Secondary #8E8E93 */
 
-    --accent: 30 75% 58%;
-    --accent-foreground: 24 14% 8%;
+    --accent: 211 100% 58%;
+    --accent-foreground: 0 0% 0%;
 
-    --destructive: 0 62% 40%;
+    --destructive: 355 85% 58%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 24 12% 20%;
-    --input: 24 12% 20%;
-    --ring: 30 75% 58%;
+    --border: 240 4% 18%;          /* Apple Dark Border #2C2C2E */
+    --input: 240 4% 20%;
+    --ring: 211 100% 58%;
   }
 
   * {
@@ -76,12 +76,13 @@
 
   body {
     @apply bg-background text-foreground;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", system-ui, sans-serif;
+    letter-spacing: -0.01em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Remove ugly number input spinners */
+  /* Remove number spinners */
   input[type="number"]::-webkit-outer-spin-button,
   input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -92,45 +93,47 @@
   }
 }
 
-/* Tabular numbers for price stability */
-.tnum,
+/* Apple typography & tabular numbers */
 .tabular-nums {
   font-variant-numeric: tabular-nums;
-  font-feature-settings: "tnum";
 }
 
-/* Emil Kowalski Button & Press Physics */
-.emil-press {
-  transition: transform 160ms var(--ease-out), opacity 160ms var(--ease-out), background-color 160ms var(--ease-out), border-color 160ms var(--ease-out);
+/* Apple direct tactile feedback on pointer-down */
+.apple-press {
+  transition: transform 120ms var(--ease-spring), opacity 120ms ease;
 }
-
-.emil-press:active {
+.apple-press:active {
   transform: scale(0.97);
 }
 
-/* Origin-aware dialog scale (Never scale from 0) */
-@keyframes emil-dialog-in {
+/* Apple frosted glass */
+.apple-glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+.dark .apple-glass {
+  background: rgba(28, 28, 30, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
+
+/* Apple spring modal entrance */
+@keyframes apple-modal-in {
   from {
     opacity: 0;
-    transform: scale(0.95) translateY(4px);
-    filter: blur(2px);
+    transform: translate(-50%, -48%) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
-    filter: blur(0);
+    transform: translate(-50%, -50%) scale(1);
   }
 }
 
-.animate-dialog-in {
-  animation: emil-dialog-in 220ms var(--ease-out) forwards;
-}
-
-/* Staggered list reveals */
-@keyframes emil-fade-in {
+@keyframes apple-fade-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -138,6 +141,10 @@
   }
 }
 
-.animate-fade-in {
-  animation: emil-fade-in 200ms var(--ease-out) forwards;
+.animate-apple-in {
+  animation: apple-modal-in 240ms var(--ease-spring) forwards;
+}
+
+.animate-apple-fade {
+  animation: apple-fade-in 180ms var(--ease-apple) forwards;
 }
