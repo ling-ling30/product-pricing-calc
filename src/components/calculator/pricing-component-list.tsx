@@ -46,8 +46,8 @@ export function PricingComponentList({
   };
 
   const handleReset = () => {
-    if (window.confirm("Reset all components to standard defaults?")) {
-      onChange(DEFAULT_COMPONENTS);
+    if (window.confirm("Clear all components to start fresh?")) {
+      onChange([]);
     }
   };
 
@@ -191,18 +191,29 @@ export function PricingComponentList({
         ))}
 
         {components.length === 0 && (
-          <div className="p-10 text-center rounded-xl border border-dashed border-border bg-card/40">
-            <p className="text-sm font-medium text-muted-foreground">
-              No pricing components currently added.
-            </p>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onChange(DEFAULT_COMPONENTS)}
-              className="mt-3"
-            >
-              Load Standard Defaults
-            </Button>
+          <div className="py-12 px-6 text-center rounded-2xl border border-dashed border-border/80 bg-card/30 space-y-3">
+            <div className="w-10 h-10 mx-auto rounded-xl bg-primary/10 text-primary flex items-center justify-center">
+              <Plus className="h-5 w-5" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold text-foreground">
+                Start with a fresh product calculation
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5 max-w-sm mx-auto">
+                Add your direct material costs, processing percentages, logistics, or target margins to begin.
+              </p>
+            </div>
+            <div className="pt-2">
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => handleAddComponent({ name: "Base Material", type: "fixed", value: 100 })}
+                className="shadow-sm"
+              >
+                <Plus className="h-4 w-4 mr-1.5" />
+                Add First Component
+              </Button>
+            </div>
           </div>
         )}
       </div>

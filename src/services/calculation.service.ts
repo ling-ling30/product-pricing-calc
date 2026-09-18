@@ -144,56 +144,7 @@ export function calculatePricing(
 }
 
 /**
- * Default starter templates for new users
+ * No seeded components by default - start fresh
  */
-export const DEFAULT_COMPONENTS: PricingComponent[] = [
-  {
-    id: "c-material",
-    name: "Raw Material (Green Coffee)",
-    type: "fixed",
-    value: 10.5,
-    enabled: true,
-    category: "material",
-  },
-  {
-    id: "c-processing",
-    name: "Processing & Roasting Loss",
-    type: "pct_component",
-    value: 16.0,
-    targetComponentId: "c-material",
-    enabled: true,
-    category: "overhead",
-  },
-  {
-    id: "c-packaging",
-    name: "Degassing Valve Bag & Carton",
-    type: "fixed",
-    value: 0.85,
-    enabled: true,
-    category: "material",
-  },
-  {
-    id: "c-labor",
-    name: "Direct Labor & Packing",
-    type: "fixed",
-    value: 1.2,
-    enabled: true,
-    category: "labor",
-  },
-  {
-    id: "c-logistics",
-    name: "Export Handling & Forwarder (FOB)",
-    type: "fixed",
-    value: 1.8,
-    enabled: true,
-    category: "logistics",
-  },
-  {
-    id: "c-margin",
-    name: "Target Commercial Margin",
-    type: "margin",
-    value: 25.0,
-    enabled: true,
-    category: "profit",
-  },
-];
+export const DEFAULT_COMPONENTS: PricingComponent[] = [];
+

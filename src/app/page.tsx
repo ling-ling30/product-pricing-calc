@@ -20,8 +20,8 @@ export default function ProductCalculatorPage() {
   const { data: session } = useSession();
   const isAuthenticated = Boolean(session?.user);
 
-  // Active calculator state
-  const [components, setComponents] = useState<PricingComponent[]>(DEFAULT_COMPONENTS);
+  // Active calculator state - fresh blank canvas by default
+  const [components, setComponents] = useState<PricingComponent[]>([]);
   const [currency, setCurrency] = useState<string>("USD");
   const [targetCurrency, setTargetCurrency] = useState<string>("IDR");
   const [fxBufferPct, setFxBufferPct] = useState<number>(0);
@@ -182,24 +182,7 @@ export default function ProductCalculatorPage() {
 
   const handleNewScratchpad = () => {
     setActivePresetId(undefined);
-    setComponents([
-      {
-        id: `c-base-${Date.now()}`,
-        name: "Direct Base Material",
-        type: "fixed",
-        value: currency === "IDR" ? 170000 : 10.5,
-        enabled: true,
-        category: "material",
-      },
-      {
-        id: `c-margin-${Date.now()}`,
-        name: "Commercial Margin",
-        type: "margin",
-        value: 20,
-        enabled: true,
-        category: "profit",
-      },
-    ]);
+    setComponents([]);
   };
 
   // Batch convert all component amounts to target currency at the live rate

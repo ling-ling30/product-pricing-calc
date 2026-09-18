@@ -7,17 +7,17 @@ const LOCAL_STORAGE_CURRENCY_KEY = "cpc_currency";
 
 export class LocalStorageManager {
   static getActiveComponents(): PricingComponent[] {
-    if (typeof window === "undefined") return DEFAULT_COMPONENTS;
+    if (typeof window === "undefined") return [];
     try {
       const data = localStorage.getItem(LOCAL_STORAGE_ACTIVE_KEY);
       if (data) {
         const parsed = JSON.parse(data);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        if (Array.isArray(parsed)) return parsed;
       }
     } catch (e) {
       console.error("Failed to read from localStorage", e);
     }
-    return DEFAULT_COMPONENTS;
+    return [];
   }
 
   static saveActiveComponents(components: PricingComponent[]): void {

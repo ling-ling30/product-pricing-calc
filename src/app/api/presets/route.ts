@@ -24,16 +24,7 @@ export async function GET(request: NextRequest) {
       {
         success: false,
         error: error instanceof Error ? error.message : "Failed to fetch presets",
-        data: [
-          {
-            id: "preset-fallback",
-            name: "Default Product Model",
-            currency: "USD",
-            components: DEFAULT_COMPONENTS,
-            createdAt: Date.now(),
-            updatedAt: Date.now(),
-          },
-        ],
+        data: [],
       },
       { status: 500 }
     );
