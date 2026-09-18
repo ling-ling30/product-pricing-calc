@@ -4,8 +4,8 @@
 
 @layer base {
   :root {
-    --background: 40 33% 98%;      /* Warm cream #FAF8F5 */
-    --foreground: 24 10% 12%;      /* Deep charcoal #221F1D */
+    --background: 40 25% 98%;      /* Warm cream #FAF9F6 */
+    --foreground: 24 10% 12%;      /* Deep charcoal #201D1A */
 
     --card: 0 0% 100%;             /* Crisp white */
     --card-foreground: 24 10% 12%;
@@ -16,23 +16,23 @@
     --primary: 24 75% 26%;         /* Espresso roast #743311 */
     --primary-foreground: 40 33% 98%;
 
-    --secondary: 35 25% 92%;       /* Warm parchment #ECE7DF */
+    --secondary: 35 25% 94%;       /* Warm subtle stone #F3EFEA */
     --secondary-foreground: 24 10% 15%;
 
-    --muted: 35 20% 94%;
+    --muted: 35 20% 95%;
     --muted-foreground: 24 8% 46%;
 
-    --accent: 30 85% 42%;          /* Warm amber/copper #C66810 */
+    --accent: 30 85% 42%;          /* Warm copper #C66810 */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 35 18% 88%;          /* Subtle warm border */
-    --input: 35 18% 88%;
+    --border: 35 15% 88%;          /* Crisp light border */
+    --input: 35 15% 86%;
     --ring: 24 75% 26%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
     /* Emil Kowalski custom motion curves */
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
@@ -79,6 +79,16 @@
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Remove ugly number input spinners */
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  input[type="number"] {
+    -moz-appearance: textfield;
   }
 }
 

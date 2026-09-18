@@ -51,16 +51,23 @@ export function PricingComponentList({
     }
   };
 
+  const activeCount = components.filter((c) => c.enabled).length;
+
   return (
     <div className="space-y-4">
-      {/* List Header & Quick Actions */}
-      <div className="flex items-center justify-between">
+      {/* Header & Main Actions */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-border/60">
         <div>
-          <h2 className="text-base font-semibold tracking-tight">
-            Cost & Price Components
-          </h2>
+          <div className="flex items-center gap-2">
+            <h2 className="text-base font-bold tracking-tight text-foreground">
+              Cost & Margin Components
+            </h2>
+            <span className="text-xs text-muted-foreground font-mono tabular-nums px-2 py-0.5 rounded-full bg-secondary">
+              {activeCount} active
+            </span>
+          </div>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Add fixed expenses, dynamic yield/scrap percentages, or target profit margins.
+            Configure direct raw materials, process shrinkage/loss, packaging, and commercial margins.
           </p>
         </div>
 
@@ -70,16 +77,17 @@ export function PricingComponentList({
             size="sm"
             onClick={handleReset}
             title="Reset to default structure"
-            className="text-xs text-muted-foreground"
+            className="text-xs text-muted-foreground hover:text-foreground"
           >
             <RotateCcw className="h-3.5 w-3.5 mr-1" />
             Reset
           </Button>
+
           <Button
             variant="primary"
             size="sm"
             onClick={() => handleAddComponent()}
-            className="shadow-sm"
+            className="shadow-sm font-medium"
           >
             <Plus className="h-4 w-4 mr-1" />
             Add Component
@@ -87,41 +95,41 @@ export function PricingComponentList({
         </div>
       </div>
 
-      {/* Quick Template Pills */}
-      <div className="flex flex-wrap items-center gap-1.5 p-2 rounded-xl bg-secondary/50 border border-border/60">
+      {/* Quick Starter Templates */}
+      <div className="flex flex-wrap items-center gap-1.5 p-2 rounded-xl bg-secondary/40 border border-border/60">
         <span className="text-[11px] font-medium text-muted-foreground flex items-center gap-1 mr-1">
           <Sparkles className="h-3 w-3 text-accent" />
-          Quick add:
+          Quick insert:
         </span>
         <button
           type="button"
           onClick={() =>
             handleAddComponent({
-              name: "Raw Material",
+              name: "Raw Material Basis",
               type: "fixed",
-              value: 100,
+              value: currency === "IDR" ? 170000 : 100,
               category: "material",
             })
           }
-          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border text-foreground transition-all duration-160 active:scale-95"
+          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border/80 text-foreground transition-all duration-160 active:scale-95 font-medium"
         >
-          + Raw Material (Fixed)
+          + Raw Material
         </button>
         <button
           type="button"
           onClick={() => {
             const firstMaterial = components.find((c) => c.category === "material") || components[0];
             handleAddComponent({
-              name: "Processing Loss / Shrinkage",
+              name: "Processing Shrinkage / Waste",
               type: "pct_component",
               value: 15,
               targetComponentId: firstMaterial?.id,
               category: "overhead",
             });
           }}
-          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border text-foreground transition-all duration-160 active:scale-95"
+          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border/80 text-foreground transition-all duration-160 active:scale-95 font-medium"
         >
-          + Yield Loss (% of Item)
+          + Shrinkage (% of Item)
         </button>
         <button
           type="button"
@@ -129,27 +137,27 @@ export function PricingComponentList({
             handleAddComponent({
               name: "Packaging & Bagging",
               type: "fixed",
-              value: 5,
+              value: currency === "IDR" ? 8000 : 0.85,
               category: "material",
             })
           }
-          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border text-foreground transition-all duration-160 active:scale-95"
+          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border/80 text-foreground transition-all duration-160 active:scale-95 font-medium"
         >
-          + Packaging (Fixed)
+          + Packaging
         </button>
         <button
           type="button"
           onClick={() =>
             handleAddComponent({
-              name: "Shipping & Handling",
-              type: "pct_subtotal",
-              value: 8,
+              name: "Logistics & Forwarder",
+              type: "fixed",
+              value: currency === "IDR" ? 35000 : 1.8,
               category: "logistics",
             })
           }
-          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border text-foreground transition-all duration-160 active:scale-95"
+          className="text-xs px-2.5 py-1 rounded-md bg-card hover:bg-muted border border-border/80 text-foreground transition-all duration-160 active:scale-95 font-medium"
         >
-          + Logistics (% Subtotal)
+          + Logistics
         </button>
         <button
           type="button"
@@ -161,14 +169,14 @@ export function PricingComponentList({
               category: "profit",
             })
           }
-          className="text-xs px-2.5 py-1 rounded-md bg-accent/15 hover:bg-accent/25 border border-accent/30 text-accent font-medium transition-all duration-160 active:scale-95"
+          className="text-xs px-2.5 py-1 rounded-md bg-accent/15 hover:bg-accent/25 border border-accent/30 text-accent font-semibold transition-all duration-160 active:scale-95"
         >
-          + Target Margin (20%)
+          + 20% Margin
         </button>
       </div>
 
-      {/* Component Rows */}
-      <div className="space-y-2.5">
+      {/* Component Rows List */}
+      <div className="space-y-3">
         {components.map((comp, idx) => (
           <PricingComponentRow
             key={comp.id}
@@ -183,9 +191,9 @@ export function PricingComponentList({
         ))}
 
         {components.length === 0 && (
-          <div className="p-8 text-center rounded-xl border border-dashed border-border bg-card/50">
+          <div className="p-10 text-center rounded-xl border border-dashed border-border bg-card/40">
             <p className="text-sm font-medium text-muted-foreground">
-              No pricing components defined yet.
+              No pricing components currently added.
             </p>
             <Button
               variant="outline"
@@ -193,7 +201,7 @@ export function PricingComponentList({
               onClick={() => onChange(DEFAULT_COMPONENTS)}
               className="mt-3"
             >
-              Load Standard Starter Components
+              Load Standard Defaults
             </Button>
           </div>
         )}

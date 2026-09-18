@@ -7,7 +7,7 @@ import { Select } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
-import { Trash2, GripVertical, Percent, DollarSign, TrendingUp } from "lucide-react";
+import { Trash2, GripVertical, Percent, DollarSign, ArrowRight } from "lucide-react";
 
 interface PricingComponentRowProps {
   component: PricingComponent;
@@ -17,8 +17,6 @@ interface PricingComponentRowProps {
   currency: string;
   onUpdate: (updated: PricingComponent) => void;
   onDelete: (id: string) => void;
-  onMoveUp?: () => void;
-  onMoveDown?: () => void;
 }
 
 export function PricingComponentRow({
@@ -48,129 +46,158 @@ export function PricingComponentRow({
     });
   };
 
+  const isProfit = component.type === "margin" || component.type === "markup";
+
   return (
     <div
-      className={`group relative flex flex-col md:flex-row md:items-center gap-3 p-3.5 rounded-xl border transition-all duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] ${
+      className={`group relative rounded-xl border p-3.5 transition-all duration-160 ease-[cubic-bezier(0.23,1,0.32,1)] ${
         component.enabled
-          ? "bg-card border-border shadow-sm hover:border-primary/40"
-          : "bg-muted/40 border-dashed border-border/70 opacity-60"
+          ? "bg-card border-border/80 shadow-sm hover:border-primary/40 hover:shadow"
+          : "bg-muted/30 border-dashed border-border/70 opacity-60"
       }`}
     >
-      {/* Drag & Enable indicator */}
-      <div className="flex items-center justify-between md:justify-start gap-2">
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <GripVertical className="h-4 w-4 opacity-40 group-hover:opacity-100 transition-opacity cursor-grab" />
-          <span className="text-xs font-mono w-5 text-center text-muted-foreground/80">
+      {/* Upper Row: Controls, Full-Width Name, Nominal Result & Trash */}
+      <div className="flex items-center gap-3">
+        {/* Grip & Index */}
+        <div className="flex items-center gap-1.5 text-muted-foreground shrink-0">
+          <GripVertical className="h-4 w-4 opacity-30 group-hover:opacity-80 transition-opacity cursor-grab" />
+          <span className="text-xs font-mono font-medium w-4 text-center text-muted-foreground/70">
             {index + 1}
           </span>
         </div>
 
-        <Switch
-          checked={component.enabled}
-          onCheckedChange={(checked) => onUpdate({ ...component, enabled: checked })}
-          title={component.enabled ? "Disable component" : "Enable component"}
-        />
-      </div>
-
-      {/* Component Name */}
-      <div className="flex-1 min-w-[140px]">
-        <Input
-          value={component.name}
-          onChange={(e) => onUpdate({ ...component, name: e.target.value })}
-          placeholder="e.g. Green Coffee, Packaging, Margin"
-          disabled={!component.enabled}
-          className="font-medium text-sm"
-        />
-      </div>
-
-      {/* Component Type Selector */}
-      <div className="w-full md:w-[170px]">
-        <Select
-          value={component.type}
-          onChange={handleTypeChange}
-          disabled={!component.enabled}
-        >
-          <option value="fixed">Fixed Amount</option>
-          <option value="pct_subtotal">% of Subtotal</option>
-          <option value="pct_component">% of Item</option>
-          <option value="margin">Target Margin %</option>
-          <option value="markup">Markup %</option>
-        </Select>
-      </div>
-
-      {/* Target Item Reference (Only visible if pct_component) */}
-      {component.type === "pct_component" && (
-        <div className="w-full md:w-[150px]">
-          <Select
-            value={component.targetComponentId || ""}
-            onChange={(e) =>
-              onUpdate({ ...component, targetComponentId: e.target.value })
-            }
-            disabled={!component.enabled}
-          >
-            <option value="" disabled>
-              Select item...
-            </option>
-            {availableTargets.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.name || "Untitled"}
-              </option>
-            ))}
-          </Select>
+        {/* High-Contrast Toggle */}
+        <div className="shrink-0">
+          <Switch
+            checked={component.enabled}
+            onCheckedChange={(checked) => onUpdate({ ...component, enabled: checked })}
+            title={component.enabled ? "Disable this cost component" : "Enable this cost component"}
+          />
         </div>
-      )}
 
-      {/* Value Input */}
-      <div className="w-full md:w-[120px]">
-        <Input
-          type="number"
-          step={isPercentageType ? "0.1" : "1"}
-          value={component.value}
-          onChange={(e) =>
-            onUpdate({
-              ...component,
-              value: parseFloat(e.target.value) || 0,
-            })
-          }
-          disabled={!component.enabled}
-          prefixNode={
-            isPercentageType ? (
-              <Percent className="h-3.5 w-3.5" />
-            ) : currency === "IDR" ? (
-              <span className="text-xs">Rp</span>
-            ) : (
-              <DollarSign className="h-3.5 w-3.5" />
-            )
-          }
-          className="text-right tabular-nums font-mono"
-        />
-      </div>
+        {/* Component Name - Full Width Inline Input (Never Truncated) */}
+        <div className="flex-1 min-w-0">
+          <input
+            type="text"
+            value={component.name}
+            onChange={(e) => onUpdate({ ...component, name: e.target.value })}
+            placeholder="e.g. Green Coffee Beans, Toll Roasting, Degassing Bags..."
+            disabled={!component.enabled}
+            className="w-full bg-transparent px-2 py-1 text-sm font-semibold text-foreground placeholder:text-muted-foreground/50 border-b border-transparent hover:border-border focus:border-primary focus:bg-background/80 rounded transition-colors focus:outline-none"
+          />
+        </div>
 
-      {/* Live Calculated Impact Badge */}
-      <div className="flex items-center justify-between md:justify-end gap-2 md:min-w-[130px]">
-        {lineResult ? (
-          <div className="text-right">
-            <div className="text-xs font-semibold tabular-nums font-mono">
+        {/* Live Evaluated Line Impact */}
+        <div className="text-right shrink-0 min-w-[100px]">
+          {lineResult && component.enabled ? (
+            <div
+              className={`text-sm font-bold font-mono tabular-nums ${
+                isProfit ? "text-emerald-700 dark:text-emerald-400" : "text-foreground"
+              }`}
+            >
               {lineResult.monetaryValue >= 0 ? "+" : ""}
               {formatCurrency(lineResult.monetaryValue, currency)}
             </div>
-            <div className="text-[10px] text-muted-foreground tabular-nums">
-              Sub: {formatCurrency(lineResult.subtotalAfter, currency)}
+          ) : (
+            <div className="text-xs text-muted-foreground/60 font-mono tabular-nums">
+              Excluded
             </div>
+          )}
+        </div>
+
+        {/* Delete Button with Emil Press Physics */}
+        <div className="shrink-0">
+          <button
+            type="button"
+            onClick={() => onDelete(component.id)}
+            className="p-1.5 rounded-md text-muted-foreground/60 hover:text-destructive hover:bg-destructive/10 transition-all duration-160 active:scale-90"
+            title="Remove component"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Lower Row: Method Selector, Target Selection, Value Input, and Context */}
+      <div className="mt-2.5 pt-2.5 border-t border-border/40 pl-11 flex flex-wrap items-center gap-3 text-xs">
+        {/* Calculation Method Dropdown */}
+        <div className="w-[160px] shrink-0">
+          <Select
+            value={component.type}
+            onChange={handleTypeChange}
+            disabled={!component.enabled}
+            className="h-8 text-xs font-medium"
+          >
+            <option value="fixed">Fixed Amount</option>
+            <option value="pct_subtotal">% of Subtotal</option>
+            <option value="pct_component">% of Specific Item</option>
+            <option value="margin">Target Margin %</option>
+            <option value="markup">Markup %</option>
+          </Select>
+        </div>
+
+        {/* Target Component Dropdown (Only when type === 'pct_component') */}
+        {component.type === "pct_component" && (
+          <div className="w-[180px] shrink-0">
+            <Select
+              value={component.targetComponentId || ""}
+              onChange={(e) =>
+                onUpdate({ ...component, targetComponentId: e.target.value })
+              }
+              disabled={!component.enabled}
+              className="h-8 text-xs"
+            >
+              <option value="" disabled>
+                Select referenced item...
+              </option>
+              {availableTargets.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.name || "Untitled Item"}
+                </option>
+              ))}
+            </Select>
           </div>
-        ) : (
-          <div className="text-xs text-muted-foreground tabular-nums">—</div>
         )}
 
-        {/* Delete button with Emil press */}
-        <button
-          type="button"
-          onClick={() => onDelete(component.id)}
-          className="p-1.5 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors duration-160 active:scale-90"
-          title="Remove component"
-        >
-          <Trash2 className="h-4 w-4" />
-        </button>
+        {/* Numeric Value Input */}
+        <div className="w-[130px] shrink-0">
+          <Input
+            type="number"
+            step={isPercentageType ? "0.1" : "1"}
+            value={component.value}
+            onChange={(e) =>
+              onUpdate({
+                ...component,
+                value: parseFloat(e.target.value) || 0,
+              })
+            }
+            disabled={!component.enabled}
+            prefixNode={
+              isPercentageType ? (
+                <Percent className="h-3.5 w-3.5 text-muted-foreground" />
+              ) : currency === "IDR" ? (
+                <span className="text-xs font-semibold text-muted-foreground">Rp</span>
+              ) : (
+                <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+              )
+            }
+            className="h-8 text-xs text-right tabular-nums font-mono font-medium"
+          />
+        </div>
+
+        {/* Running Subtotal & Formula Context Note */}
+        {lineResult && component.enabled && (
+          <div className="ml-auto flex items-center gap-2 text-muted-foreground text-[11px] tabular-nums">
+            {lineResult.referenceDetail && (
+              <span className="hidden sm:inline-block opacity-80">
+                {lineResult.referenceDetail}
+              </span>
+            )}
+            <span className="font-medium text-foreground/80 bg-secondary/80 px-2 py-0.5 rounded-md border border-border/50">
+              Subtotal: {formatCurrency(lineResult.subtotalAfter, currency)}
+            </span>
+          </div>
+        )}
       </div>
     </div>
   );
