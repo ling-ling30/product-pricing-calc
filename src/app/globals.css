@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 33% 98%;      /* Warm cream #FAF8F5 */
+    --foreground: 24 10% 12%;      /* Deep charcoal #221F1D */
+
+    --card: 0 0% 100%;             /* Crisp white */
+    --card-foreground: 24 10% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 10% 12%;
+
+    --primary: 24 75% 26%;         /* Espresso roast #743311 */
+    --primary-foreground: 40 33% 98%;
+
+    --secondary: 35 25% 92%;       /* Warm parchment #ECE7DF */
+    --secondary-foreground: 24 10% 15%;
+
+    --muted: 35 20% 94%;
+    --muted-foreground: 24 8% 46%;
+
+    --accent: 30 85% 42%;          /* Warm amber/copper #C66810 */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 35 18% 88%;          /* Subtle warm border */
+    --input: 35 18% 88%;
+    --ring: 24 75% 26%;
+
+    --radius: 0.75rem;
+
+    /* Emil Kowalski custom motion curves */
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+    --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+  }
+
+  .dark {
+    --background: 24 14% 9%;       /* Rich obsidian #181513 */
+    --foreground: 40 25% 94%;
+
+    --card: 24 14% 12%;            /* Deep card surface #231E1A */
+    --card-foreground: 40 25% 94%;
+
+    --popover: 24 14% 12%;
+    --popover-foreground: 40 25% 94%;
+
+    --primary: 30 75% 58%;         /* Warm roasted caramel #E88E40 */
+    --primary-foreground: 24 14% 8%;
+
+    --secondary: 24 12% 18%;
+    --secondary-foreground: 40 25% 90%;
+
+    --muted: 24 12% 16%;
+    --muted-foreground: 35 12% 62%;
+
+    --accent: 30 75% 58%;
+    --accent-foreground: 24 14% 8%;
+
+    --destructive: 0 62% 40%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 24 12% 20%;
+    --input: 24 12% 20%;
+    --ring: 30 75% 58%;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Tabular numbers for price stability */
+.tnum,
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* Emil Kowalski Button & Press Physics */
+.emil-press {
+  transition: transform 160ms var(--ease-out), opacity 160ms var(--ease-out), background-color 160ms var(--ease-out), border-color 160ms var(--ease-out);
+}
+
+.emil-press:active {
+  transform: scale(0.97);
+}
+
+/* Origin-aware dialog scale (Never scale from 0) */
+@keyframes emil-dialog-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(4px);
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+.animate-dialog-in {
+  animation: emil-dialog-in 220ms var(--ease-out) forwards;
+}
+
+/* Staggered list reveals */
+@keyframes emil-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: emil-fade-in 200ms var(--ease-out) forwards;
+}
