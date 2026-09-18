@@ -6,40 +6,63 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatPercent } from "@/lib/utils";
-import { Copy, Check, FileSpreadsheet, Layers } from "lucide-react";
+import { Copy, Check, Layers } from "lucide-react";
 
 interface WaterfallBreakdownProps {
   summary: CalculationSummary;
   currency: string;
+  targetCurrency: string;
+  effectiveRate: number;
 }
 
 export function WaterfallBreakdown({
   summary,
   currency,
+  targetCurrency,
+  effectiveRate,
 }: WaterfallBreakdownProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopyQuote = () => {
-    let text = `==============================\n`;
-    text += `PRODUCT PRICING BREAKDOWN\n`;
-    text += `==============================\n\n`;
+    let text = `========================================\n`;
+    text += `COMMERCIAL PRICE QUOTE & BREAKDOWN\n`;
+    text += `========================================\n\n`;
 
     summary.lines.forEach((line, idx) => {
       if (line.enabled) {
+        const convertedNominal = line.monetaryValue * effectiveRate;
         text += `${idx + 1}. ${line.name}: +${formatCurrency(
           line.monetaryValue,
           currency
-        )} (Subtotal: ${formatCurrency(line.subtotalAfter, currency)})\n`;
+        )} [≈ ${formatCurrency(convertedNominal, targetCurrency)}]\n`;
       }
     });
 
-    text += `\n------------------------------\n`;
-    text += `Total Product Cost: ${formatCurrency(summary.totalCost, currency)}\n`;
-    text += `Final Selling Price: ${formatCurrency(summary.finalSellPrice, currency)}\n`;
-    text += `Net Profit: ${formatCurrency(summary.netProfit, currency)} (${formatPercent(
-      summary.grossMarginPct
-    )} Margin)\n`;
-    text += `==============================\n`;
+    const convertedCost = summary.totalCost * effectiveRate;
+    const convertedPrice = summary.finalSellPrice * effectiveRate;
+    const convertedProfit = summary.netProfit * effectiveRate;
+
+    text += `\n----------------------------------------\n`;
+    text += `Total Cost: ${formatCurrency(summary.totalCost, currency)} [≈ ${formatCurrency(
+      convertedCost,
+      targetCurrency
+    )}]\n`;
+    text += `FINAL SELLING PRICE: ${formatCurrency(
+      summary.finalSellPrice,
+      currency
+    )} [≈ ${formatCurrency(convertedPrice, targetCurrency)}]\n`;
+    text += `Net Commercial Profit: ${formatCurrency(
+      summary.netProfit,
+      currency
+    )} (${formatPercent(summary.grossMarginPct)} Margin / ${formatPercent(
+      summary.markupPct
+    )} Markup)\n`;
+    text += `Exchange Rate Basis: 1 ${currency} = ${
+      targetCurrency === "IDR"
+        ? `Rp ${Math.round(effectiveRate).toLocaleString("id-ID")}`
+        : effectiveRate.toFixed(4)
+    } ${targetCurrency}\n`;
+    text += `========================================\n`;
 
     navigator.clipboard.writeText(text);
     setCopied(true);
@@ -57,7 +80,7 @@ export function WaterfallBreakdown({
             Waterfall Cost Build-up
           </CardTitle>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Step-by-step contribution of each expense and margin.
+            Step-by-step contribution with real-time FX equivalents.
           </p>
         </div>
 
@@ -75,7 +98,7 @@ export function WaterfallBreakdown({
           ) : (
             <>
               <Copy className="h-3.5 w-3.5 mr-1" />
-              Copy Quote
+              Copy Dual-Currency Quote
             </>
           )}
         </Button>
@@ -115,7 +138,10 @@ export function WaterfallBreakdown({
           </div>
           <div className="flex justify-between text-[10px] text-muted-foreground tabular-nums">
             <span>Direct Cost Basis</span>
-            <span>Final Quoted Price ({formatCurrency(summary.finalSellPrice, currency)})</span>
+            <span>
+              Final Quote ({formatCurrency(summary.finalSellPrice, currency)} ≈{" "}
+              {formatCurrency(summary.finalSellPrice * effectiveRate, targetCurrency)})
+            </span>
           </div>
         </div>
 
@@ -125,6 +151,7 @@ export function WaterfallBreakdown({
             const pct = (line.monetaryValue / finalTotal) * 100;
             const isProfitComponent =
               line.type === "margin" || line.type === "markup";
+            const convertedNominal = line.monetaryValue * effectiveRate;
 
             return (
               <div
@@ -179,7 +206,7 @@ export function WaterfallBreakdown({
                   </div>
                   {line.enabled && (
                     <div className="text-[10px] text-muted-foreground tabular-nums">
-                      {pct.toFixed(1)}% of price
+                      ≈ {formatCurrency(convertedNominal, targetCurrency)} ({pct.toFixed(1)}%)
                     </div>
                   )}
                 </div>

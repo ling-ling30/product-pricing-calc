@@ -5,11 +5,16 @@ import { CalculationSummary } from "@/types/calculator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatPercent } from "@/lib/utils";
-import { TrendingUp, DollarSign, PieChart, ShieldCheck } from "lucide-react";
+import { TrendingUp, DollarSign, PieChart, ArrowRightLeft } from "lucide-react";
 
 interface PriceSummaryHeroProps {
   summary: CalculationSummary;
   currency: string;
+  targetCurrency: string;
+  convertedSellPrice: number;
+  convertedTotalCost: number;
+  convertedNetProfit: number;
+  effectiveRate: number;
   onCurrencyChange: (currency: string) => void;
   activeCount: number;
   totalCount: number;
@@ -26,6 +31,11 @@ const SUPPORTED_CURRENCIES = [
 export function PriceSummaryHero({
   summary,
   currency,
+  targetCurrency,
+  convertedSellPrice,
+  convertedTotalCost,
+  convertedNetProfit,
+  effectiveRate,
   onCurrencyChange,
   activeCount,
   totalCount,
@@ -33,7 +43,7 @@ export function PriceSummaryHero({
   return (
     <Card className="overflow-hidden border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 shadow-md">
       <CardContent className="p-6">
-        {/* Top Header & Currency Switcher */}
+        {/* Top Header & Base Currency Switcher */}
         <div className="flex items-center justify-between pb-4 border-b border-border/60">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
@@ -44,7 +54,7 @@ export function PriceSummaryHero({
             </Badge>
           </div>
 
-          {/* Currency Pill Selector */}
+          {/* Base Currency Pill Selector */}
           <div className="flex items-center rounded-lg bg-secondary/80 p-0.5 border border-border/60">
             {SUPPORTED_CURRENCIES.map((c) => (
               <button
@@ -63,21 +73,35 @@ export function PriceSummaryHero({
           </div>
         </div>
 
-        {/* Hero Price Display */}
+        {/* Hero Price Display with Real-Time Dual Conversion */}
         <div className="py-6">
           <div className="text-4xl md:text-5xl font-bold tracking-tight text-foreground tabular-nums font-mono">
             {formatCurrency(summary.finalSellPrice, currency)}
           </div>
-          <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-            <span>Recommended customer selling price per unit</span>
-            <span className="inline-block w-1 h-1 rounded-full bg-muted-foreground/60" />
-            <span className="text-emerald-700 dark:text-emerald-400 font-medium">
+
+          {/* Real-time Converted Price Equivalent */}
+          <div className="flex items-center gap-2 mt-2">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-accent/15 border border-accent/30 text-accent text-sm font-semibold tabular-nums font-mono">
+              <ArrowRightLeft className="h-3.5 w-3.5" />
+              <span>
+                {formatCurrency(convertedSellPrice, targetCurrency)}
+              </span>
+              <span className="text-[11px] font-normal text-muted-foreground">
+                ({targetCurrency})
+              </span>
+            </div>
+
+            <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
               {formatPercent(summary.grossMarginPct)} Gross Margin
             </span>
           </div>
+
+          <div className="text-xs text-muted-foreground mt-2">
+            Quoted per unit • Real-time live converted rate
+          </div>
         </div>
 
-        {/* Metric Grid */}
+        {/* Metric Grid with Dual-Currency Tabular Numerals */}
         <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border/60">
           {/* Direct Total Cost */}
           <div className="p-3 rounded-xl bg-background border border-border/60">
@@ -88,8 +112,8 @@ export function PriceSummaryHero({
             <div className="text-base font-bold text-foreground tabular-nums font-mono mt-1">
               {formatCurrency(summary.totalCost, currency)}
             </div>
-            <div className="text-[10px] text-muted-foreground mt-0.5">
-              Accumulated costs
+            <div className="text-[10px] text-muted-foreground tabular-nums mt-0.5">
+              ≈ {formatCurrency(convertedTotalCost, targetCurrency)}
             </div>
           </div>
 
@@ -102,8 +126,8 @@ export function PriceSummaryHero({
             <div className="text-base font-bold text-emerald-700 dark:text-emerald-400 tabular-nums font-mono mt-1">
               {formatCurrency(summary.netProfit, currency)}
             </div>
-            <div className="text-[10px] text-muted-foreground mt-0.5">
-              Price minus cost
+            <div className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 tabular-nums mt-0.5">
+              ≈ {formatCurrency(convertedNetProfit, targetCurrency)}
             </div>
           </div>
 
