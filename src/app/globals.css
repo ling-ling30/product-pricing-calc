@@ -4,70 +4,72 @@
 
 @layer base {
   :root {
-    --background: 240 5% 97%;      /* Apple Clean #F5F5F7 */
-    --foreground: 240 6% 12%;      /* Apple SF Pro Deep Charcoal #1D1D1F */
+    /* High-Contrast Obsidian / Midnight Tool (Default) */
+    --background: 228 45% 5%;       /* Deep Obsidian #07090E */
+    --foreground: 210 40% 98%;      /* Crisp Pure White #F8FAFC */
 
-    --card: 0 0% 100%;             /* Pure White Surface */
-    --card-foreground: 240 6% 12%;
+    --card: 224 35% 9%;             /* High-contrast Panel #0F131D */
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 6% 12%;
+    --popover: 224 35% 9%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 211 100% 45%;       /* Apple System Blue #0071E3 */
+    --primary: 217 91% 60%;        /* Electric Cobalt #3B82F6 */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 5% 93%;       /* Soft Apple Slate #ECECEE */
-    --secondary-foreground: 240 6% 18%;
+    --secondary: 223 30% 15%;      /* Slate Dark #1A202E */
+    --secondary-foreground: 210 40% 95%;
 
-    --muted: 240 4% 94%;
-    --muted-foreground: 240 4% 46%; /* Apple Secondary Text #86868B */
+    --muted: 223 30% 13%;
+    --muted-foreground: 215 20% 68%; /* Legible Silver #94A3B8 */
 
-    --accent: 211 100% 45%;        /* Apple Interactive Blue */
+    --accent: 158 82% 42%;         /* Vivid Emerald #10B981 */
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 355 85% 54%;    /* Apple Red #FF3B30 */
+    --destructive: 0 84% 60%;      /* Vivid Red #EF4444 */
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 5% 89%;          /* Apple Subtle Border */
-    --input: 240 5% 88%;
-    --ring: 211 100% 45%;
+    --border: 222 28% 20%;         /* Crisp Hairline Border #242D40 */
+    --input: 222 28% 22%;
+    --ring: 217 91% 60%;
 
-    --radius: 0.875rem;            /* Apple 14px rounded corners */
+    --radius: 0.875rem;
 
-    /* Apple fluid interface motion curves */
+    /* Motion curves */
     --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
     --ease-apple: cubic-bezier(0.32, 0.72, 0, 1);
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  .dark {
-    --background: 0 0% 0%;         /* Apple Pure OLED Black #000000 */
-    --foreground: 0 0% 96%;        /* Apple Light Text #F5F5F7 */
+  .light {
+    /* Pure High-Contrast Studio White (Zero paper/yellow wash) */
+    --background: 0 0% 100%;        /* Crisp Pure White #FFFFFF */
+    --foreground: 222 47% 11%;      /* Deep Charcoal Ink #0F172A */
 
-    --card: 240 5% 10%;            /* Apple Deep Gray Surface #1C1C1E */
-    --card-foreground: 0 0% 96%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
 
-    --popover: 240 5% 10%;
-    --popover-foreground: 0 0% 96%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 47% 11%;
 
-    --primary: 211 100% 58%;       /* Apple Dark Mode Blue #2997FF */
-    --primary-foreground: 0 0% 0%;
+    --primary: 221 83% 53%;        /* Royal Cobalt #2563EB */
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 4% 16%;       /* Apple Dark Secondary #2C2C2E */
-    --secondary-foreground: 0 0% 92%;
+    --secondary: 210 40% 96%;      /* Cool Gray #F1F5F9 */
+    --secondary-foreground: 222 47% 11%;
 
-    --muted: 240 4% 16%;
-    --muted-foreground: 240 4% 60%; /* Apple Dark Secondary #8E8E93 */
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 47%; /* Slate #64748B */
 
-    --accent: 211 100% 58%;
-    --accent-foreground: 0 0% 0%;
+    --accent: 158 82% 42%;         /* Emerald #10B981 */
+    --accent-foreground: 0 0% 100%;
 
-    --destructive: 355 85% 58%;
+    --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 240 4% 18%;          /* Apple Dark Border #2C2C2E */
-    --input: 240 4% 20%;
-    --ring: 211 100% 58%;
+    --border: 214 32% 88%;         /* High-Contrast Crisp Border #CBD5E1 */
+    --input: 214 32% 88%;
+    --ring: 221 83% 53%;
   }
 
   * {

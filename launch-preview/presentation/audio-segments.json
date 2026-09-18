@@ -1,0 +1,56 @@
+[
+  {
+    "chapter": "problem",
+    "step": 1,
+    "text": "Most product pricing still happens in a messy spreadsheet.",
+    "audio": "problem/1.mp3"
+  },
+  {
+    "chapter": "problem",
+    "step": 2,
+    "text": "One broken cell or forgotten shrinkage fee, and you're suddenly losing money on every sale.",
+    "audio": "problem/2.mp3"
+  },
+  {
+    "chapter": "problem",
+    "step": 3,
+    "text": "Meet Product Calculator: a clean, modular way to price anything with absolute confidence.",
+    "audio": "problem/3.mp3"
+  },
+  {
+    "chapter": "engine",
+    "step": 1,
+    "text": "You build your price with simple blocks: raw materials, labor, yield loss, and shipping.",
+    "audio": "engine/1.mp3"
+  },
+  {
+    "chapter": "engine",
+    "step": 2,
+    "text": "Chain percentage fees to running subtotals, or link waste directly to a specific item.",
+    "audio": "engine/2.mp3"
+  },
+  {
+    "chapter": "engine",
+    "step": 3,
+    "text": "Enter your target margin, and the exact selling price and profit update in real time.",
+    "audio": "engine/3.mp3"
+  },
+  {
+    "chapter": "reveal",
+    "step": 1,
+    "text": "It runs completely offline on your device, with zero setup and no sign-up wall.",
+    "audio": "reveal/1.mp3"
+  },
+  {
+    "chapter": "reveal",
+    "step": 2,
+    "text": "Whenever you need to send a quote, one tap copies a clean, professional breakdown.",
+    "audio": "reveal/2.mp3"
+  },
+  {
+    "chapter": "reveal",
+    "step": 3,
+    "text": "Try it live right now at hitung-harga-product.vercel.app.",
+    "audio": "reveal/3.mp3"
+  }
+]

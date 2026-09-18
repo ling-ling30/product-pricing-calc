@@ -1,0 +1,221 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * Chapter 01 · Problem (Swiss IKB)
+ * Scoped prefix: .pb-
+ * ───────────────────────────────────────────────────────────────────── */
+
+.pb-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 80px 100px;
+  box-sizing: border-box;
+}
+
+.pb-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 24px;
+}
+
+.pb-kicker {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.pb-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-mute);
+  text-align: right;
+}
+
+.pb-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 40px;
+}
+
+.pb-title {
+  font-family: var(--font-display-en);
+  font-size: 64px;
+  font-weight: 200;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  max-width: 1200px;
+  margin: 0;
+}
+
+.pb-title strong {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Step 0: Spreadsheet Chaos Visual */
+.pb-sheet-demo {
+  width: 100%;
+  max-width: 1100px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.04);
+}
+
+.pb-sheet-head {
+  display: grid;
+  grid-template-columns: 80px 1fr 180px 220px;
+  background: var(--surface-2);
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-mute);
+  font-weight: 600;
+}
+
+.pb-sheet-head > div,
+.pb-sheet-row > div {
+  padding: 14px 20px;
+  border-right: 1px solid var(--rule);
+}
+.pb-sheet-head > div:last-child,
+.pb-sheet-row > div:last-child {
+  border-right: none;
+}
+
+.pb-sheet-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 180px 220px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--font-body);
+  font-size: 15px;
+  color: var(--text);
+  align-items: center;
+}
+
+.pb-sheet-row:last-child {
+  border-bottom: none;
+}
+
+.pb-sheet-row.pb-glitch {
+  background: rgba(255, 59, 48, 0.06);
+  animation: pb-blink 1.8s infinite ease-in-out;
+}
+
+@keyframes pb-blink {
+  0%, 100% { background: rgba(255, 59, 48, 0.05); }
+  50% { background: rgba(255, 59, 48, 0.12); }
+}
+
+.pb-err-pill {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: #d91414;
+  background: rgba(217, 20, 20, 0.1);
+  padding: 4px 10px;
+  display: inline-block;
+  font-weight: 700;
+}
+
+/* Step 1: Contrast Margin Breakdown */
+.pb-contrast-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  max-width: 1100px;
+}
+
+.pb-contrast-card {
+  padding: 36px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  position: relative;
+}
+
+.pb-contrast-card.pb-bad {
+  border-color: rgba(255, 59, 48, 0.4);
+  background: rgba(255, 59, 48, 0.02);
+}
+
+.pb-card-tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-mute);
+  margin-bottom: 12px;
+}
+
+.pb-big-num {
+  font-family: var(--font-display-en);
+  font-size: 80px;
+  font-weight: 200;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  margin-bottom: 8px;
+}
+
+.pb-big-num.pb-good {
+  color: #107c41;
+}
+
+.pb-big-num.pb-danger {
+  color: #d91414;
+  font-weight: 300;
+}
+
+.pb-card-desc {
+  font-size: 14px;
+  color: var(--text-mute);
+  line-height: 1.5;
+}
+
+/* Step 2: Product Calculator Reveal */
+.pb-hero-banner {
+  padding: 48px;
+  border: 1px solid var(--accent);
+  background: var(--surface);
+  position: relative;
+  max-width: 1100px;
+  box-shadow: 0 16px 48px rgba(0, 47, 167, 0.08);
+}
+
+.pb-badges-row {
+  display: flex;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.pb-spec-badge {
+  padding: 8px 16px;
+  border: 1px solid var(--rule);
+  background: var(--surface-2);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.pb-spec-badge.pb-highlight {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.pb-footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-mute);
+}

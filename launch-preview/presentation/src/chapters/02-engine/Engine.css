@@ -1,0 +1,178 @@
+/* ─────────────────────────────────────────────────────────────────────
+ * Chapter 02 · Engine (Swiss IKB)
+ * Scoped prefix: .eg-
+ * ───────────────────────────────────────────────────────────────────── */
+
+.eg-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 80px 100px;
+  box-sizing: border-box;
+}
+
+.eg-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 24px;
+}
+
+.eg-kicker {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.eg-meta {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-mute);
+  text-align: right;
+}
+
+.eg-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 36px;
+}
+
+.eg-title {
+  font-family: var(--font-display-en);
+  font-size: 60px;
+  font-weight: 200;
+  line-height: 1.1;
+  letter-spacing: -0.03em;
+  color: var(--text);
+  max-width: 1200px;
+  margin: 0;
+}
+
+.eg-title strong {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* Step 0: Stacked Cost Blocks */
+.eg-stack-demo {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 900px;
+}
+
+.eg-block-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--accent);
+}
+
+.eg-block-name {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.eg-block-val {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.eg-subtotal-bar {
+  margin-top: 12px;
+  padding: 18px 24px;
+  background: var(--surface-2);
+  border: 1px solid var(--rule);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+}
+
+/* Step 1: Percentage Cascades */
+.eg-link-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 1000px;
+}
+
+.eg-link-card {
+  padding: 28px;
+  border: 1px solid var(--rule);
+  background: var(--surface);
+}
+
+.eg-link-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.eg-pill-accent {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+  padding: 3px 8px;
+  font-weight: 600;
+}
+
+/* Step 2: Margin Solver Hero */
+.eg-hero-calc {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 32px;
+  align-items: center;
+  max-width: 1100px;
+}
+
+.eg-calc-panel {
+  border: 1px solid var(--rule);
+  padding: 36px;
+  background: var(--surface);
+}
+
+.eg-calc-hero {
+  border: 1px solid var(--accent);
+  padding: 40px;
+  background: var(--surface);
+  box-shadow: 0 16px 48px rgba(0, 47, 167, 0.08);
+}
+
+.eg-large-price {
+  font-family: var(--font-display-en);
+  font-size: 72px;
+  font-weight: 200;
+  letter-spacing: -0.04em;
+  color: var(--text);
+  line-height: 1;
+  margin-top: 12px;
+  margin-bottom: 16px;
+}
+
+.eg-footer {
+  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--text-mute);
+}
