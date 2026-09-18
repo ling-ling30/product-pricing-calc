@@ -13,7 +13,11 @@ export function formatCurrency(
   const safeAmount = Number.isFinite(amount) ? amount : 0;
   
   if (currency === "IDR") {
-    return `Rp${Math.round(safeAmount).toLocaleString("id-ID")}`;
+    return `Rp ${Math.round(safeAmount).toLocaleString("id-ID")}`;
+  }
+
+  if (currency === "JPY") {
+    return `¥${Math.round(safeAmount).toLocaleString("ja-JP")}`;
   }
 
   try {

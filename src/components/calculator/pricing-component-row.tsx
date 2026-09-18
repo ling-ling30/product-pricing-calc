@@ -7,7 +7,8 @@ import { Select } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
-import { Trash2, GripVertical, Percent, DollarSign, ArrowRight } from "lucide-react";
+import { getCurrencySymbol } from "@/lib/currencies";
+import { Trash2, GripVertical, Percent, ArrowRight } from "lucide-react";
 
 interface PricingComponentRowProps {
   component: PricingComponent;
@@ -175,10 +176,10 @@ export function PricingComponentRow({
             prefixNode={
               isPercentageType ? (
                 <Percent className="h-3.5 w-3.5 text-muted-foreground" />
-              ) : currency === "IDR" ? (
-                <span className="text-xs font-semibold text-muted-foreground">Rp</span>
               ) : (
-                <DollarSign className="h-3.5 w-3.5 text-muted-foreground" />
+                <span className="text-xs font-semibold text-muted-foreground">
+                  {getCurrencySymbol(currency)}
+                </span>
               )
             }
             className="h-8 text-xs text-right tabular-nums font-mono font-medium"

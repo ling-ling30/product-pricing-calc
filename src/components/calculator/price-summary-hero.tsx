@@ -5,46 +5,32 @@ import { CalculationSummary } from "@/types/calculator";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatPercent } from "@/lib/utils";
-import { TrendingUp, DollarSign, PieChart, ArrowRightLeft } from "lucide-react";
+import { SUPPORTED_CURRENCIES, getCurrencySymbol } from "@/lib/currencies";
+import { TrendingUp, DollarSign, PieChart, Coins } from "lucide-react";
 
 interface PriceSummaryHeroProps {
   summary: CalculationSummary;
   currency: string;
-  targetCurrency: string;
-  convertedSellPrice: number;
-  convertedTotalCost: number;
-  convertedNetProfit: number;
-  effectiveRate: number;
   onCurrencyChange: (currency: string) => void;
   activeCount: number;
   totalCount: number;
 }
 
-const SUPPORTED_CURRENCIES = [
-  { code: "USD", label: "USD ($)" },
-  { code: "IDR", label: "IDR (Rp)" },
-  { code: "EUR", label: "EUR (€)" },
-  { code: "GBP", label: "GBP (£)" },
-  { code: "SGD", label: "SGD ($)" },
-];
-
 export function PriceSummaryHero({
   summary,
   currency,
-  targetCurrency,
-  convertedSellPrice,
-  convertedTotalCost,
-  convertedNetProfit,
-  effectiveRate,
   onCurrencyChange,
   activeCount,
   totalCount,
 }: PriceSummaryHeroProps) {
+  const quickCurrencies = ["USD", "IDR", "EUR", "GBP", "SGD"];
+  const isOtherCurrency = !quickCurrencies.includes(currency);
+
   return (
     <Card className="overflow-hidden border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 shadow-md">
       <CardContent className="p-6">
         {/* Top Header & Base Currency Switcher */}
-        <div className="flex items-center justify-between pb-4 border-b border-border/60">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-border/60">
           <div className="flex items-center gap-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               Final Quoted Price
@@ -54,54 +40,84 @@ export function PriceSummaryHero({
             </Badge>
           </div>
 
-          {/* Base Currency Pill Selector */}
-          <div className="flex items-center rounded-lg bg-secondary/80 p-0.5 border border-border/60">
-            {SUPPORTED_CURRENCIES.map((c) => (
-              <button
-                key={c.code}
-                type="button"
-                onClick={() => onCurrencyChange(c.code)}
-                className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-160 active:scale-95 ${
-                  currency === c.code
-                    ? "bg-primary text-primary-foreground shadow-sm"
+          {/* Base Currency Selector */}
+          <div className="flex items-center gap-1.5 self-start sm:self-auto">
+            <Coins className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
+            <span className="text-xs text-muted-foreground font-medium hidden xs:inline">
+              Base Currency:
+            </span>
+
+            {/* Quick-select pills */}
+            <div className="flex items-center rounded-lg bg-secondary/80 p-0.5 border border-border/60">
+              {quickCurrencies.map((c) => (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => onCurrencyChange(c)}
+                  className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-160 active:scale-95 ${
+                    currency === c
+                      ? "bg-primary text-primary-foreground shadow-sm font-semibold"
+                      : "text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {c}
+                </button>
+              ))}
+
+              {/* Extended Currencies Dropdown */}
+              <select
+                value={isOtherCurrency ? currency : ""}
+                onChange={(e) => {
+                  if (e.target.value) onCurrencyChange(e.target.value);
+                }}
+                className={`px-2 py-1 text-xs font-medium rounded-md bg-transparent border-0 cursor-pointer focus:outline-none transition-colors ${
+                  isOtherCurrency
+                    ? "bg-primary text-primary-foreground font-semibold"
                     : "text-muted-foreground hover:text-foreground"
                 }`}
+                title="Select other currency"
               >
-                {c.code}
-              </button>
-            ))}
+                <option value="" disabled className="bg-popover text-popover-foreground">
+                  {isOtherCurrency ? currency : "More..."}
+                </option>
+                {SUPPORTED_CURRENCIES.filter((c) => !quickCurrencies.includes(c.code)).map((c) => (
+                  <option
+                    key={c.code}
+                    value={c.code}
+                    className="bg-popover text-popover-foreground"
+                  >
+                    {c.code} ({c.symbol}) - {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
         </div>
 
-        {/* Hero Price Display with Real-Time Dual Conversion */}
+        {/* Hero Price Display */}
         <div className="py-6">
           <div className="text-4xl md:text-5xl font-bold tracking-tight text-foreground tabular-nums font-mono">
             {formatCurrency(summary.finalSellPrice, currency)}
           </div>
 
-          {/* Real-time Converted Price Equivalent */}
           <div className="flex items-center gap-2 mt-2">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-accent/15 border border-accent/30 text-accent text-sm font-semibold tabular-nums font-mono">
-              <ArrowRightLeft className="h-3.5 w-3.5" />
-              <span>
-                {formatCurrency(convertedSellPrice, targetCurrency)}
-              </span>
-              <span className="text-[11px] font-normal text-muted-foreground">
-                ({targetCurrency})
-              </span>
-            </div>
-
-            <span className="text-xs text-emerald-700 dark:text-emerald-400 font-medium">
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-xs text-emerald-700 dark:text-emerald-400 font-semibold">
               {formatPercent(summary.grossMarginPct)} Gross Margin
             </span>
+
+            {summary.netProfit > 0 && (
+              <span className="text-xs text-muted-foreground">
+                +{formatCurrency(summary.netProfit, currency)} profit/unit
+              </span>
+            )}
           </div>
 
           <div className="text-xs text-muted-foreground mt-2">
-            Quoted per unit • Real-time live converted rate
+            Quoted per unit based on itemized cost model
           </div>
         </div>
 
-        {/* Metric Grid with Dual-Currency Tabular Numerals */}
+        {/* Metric Grid with Tabular Numerals */}
         <div className="grid grid-cols-3 gap-3 pt-4 border-t border-border/60">
           {/* Direct Total Cost */}
           <div className="p-3 rounded-xl bg-background border border-border/60">
@@ -112,8 +128,8 @@ export function PriceSummaryHero({
             <div className="text-base font-bold text-foreground tabular-nums font-mono mt-1">
               {formatCurrency(summary.totalCost, currency)}
             </div>
-            <div className="text-[10px] text-muted-foreground tabular-nums mt-0.5">
-              ≈ {formatCurrency(convertedTotalCost, targetCurrency)}
+            <div className="text-[10px] text-muted-foreground mt-0.5">
+              Cost basis
             </div>
           </div>
 
@@ -126,8 +142,8 @@ export function PriceSummaryHero({
             <div className="text-base font-bold text-emerald-700 dark:text-emerald-400 tabular-nums font-mono mt-1">
               {formatCurrency(summary.netProfit, currency)}
             </div>
-            <div className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 tabular-nums mt-0.5">
-              ≈ {formatCurrency(convertedNetProfit, targetCurrency)}
+            <div className="text-[10px] text-emerald-600/80 dark:text-emerald-400/80 mt-0.5">
+              Commercial return
             </div>
           </div>
 

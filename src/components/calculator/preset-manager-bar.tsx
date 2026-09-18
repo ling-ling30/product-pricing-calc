@@ -7,7 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Dialog } from "@/components/ui/dialog";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, Save, Plus, Trash2, Cloud, HardDrive } from "lucide-react";
+import { SUPPORTED_CURRENCIES } from "@/lib/currencies";
+import { Bookmark, Save, Plus, Trash2, Cloud, HardDrive, Coins } from "lucide-react";
 
 interface PresetManagerBarProps {
   presets: CalculationPreset[];
@@ -19,6 +20,7 @@ interface PresetManagerBarProps {
   onSavePreset: (preset: CalculationPreset) => void;
   onDeletePreset: (id: string) => void;
   onNewScratchpad: () => void;
+  onCurrencyChange?: (currency: string) => void;
 }
 
 export function PresetManagerBar({
@@ -31,6 +33,7 @@ export function PresetManagerBar({
   onSavePreset,
   onDeletePreset,
   onNewScratchpad,
+  onCurrencyChange,
 }: PresetManagerBarProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [presetName, setPresetName] = useState("");
@@ -65,7 +68,7 @@ export function PresetManagerBar({
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3 p-3 rounded-xl bg-card border border-border shadow-sm">
-        {/* Preset Selector */}
+        {/* Preset Selector & Sync Status */}
         <div className="flex items-center gap-2.5 flex-1 min-w-[240px]">
           <Bookmark className="h-4 w-4 text-primary shrink-0" />
           <div className="flex-1 max-w-xs">
@@ -102,8 +105,26 @@ export function PresetManagerBar({
           </div>
         </div>
 
-        {/* Preset Actions */}
+        {/* Currency Selector & Actions */}
         <div className="flex items-center gap-2">
+          {onCurrencyChange && (
+            <div className="flex items-center gap-1.5 border-r border-border/60 pr-2 mr-1">
+              <Coins className="h-3.5 w-3.5 text-muted-foreground hidden sm:block" />
+              <select
+                value={currency}
+                onChange={(e) => onCurrencyChange(e.target.value)}
+                className="h-8 text-xs font-semibold px-2 py-1 rounded-md bg-secondary/80 border border-border/60 text-foreground cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-160"
+                title="Select Base Currency"
+              >
+                {SUPPORTED_CURRENCIES.map((c) => (
+                  <option key={c.code} value={c.code} className="bg-popover text-popover-foreground">
+                    {c.code} ({c.symbol})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <Button
             variant="outline"
             size="sm"
@@ -143,7 +164,7 @@ export function PresetManagerBar({
         open={isDialogOpen}
         onOpenChange={setIsDialogOpen}
         title="Save Calculation Configuration"
-        description="Save your component stack and pricing parameters for future quotes."
+        description={`Save your component stack and pricing parameters (${currency}) for future quotes.`}
       >
         <form onSubmit={handleConfirmSave} className="space-y-4 mt-4">
           <div>
