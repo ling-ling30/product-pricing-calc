@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { PricingComponent, CalculationLineResult } from "@/types/calculator";
 import { PricingComponentRow } from "./pricing-component-row";
 import { Button } from "@/components/ui/button";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Plus, RotateCcw, Sparkles } from "lucide-react";
-import { DEFAULT_COMPONENTS } from "@/services/calculation.service";
+import { toast } from "sonner";
 
 interface PricingComponentListProps {
   components: PricingComponent[];
@@ -20,6 +21,7 @@ export function PricingComponentList({
   currency,
   onChange,
 }: PricingComponentListProps) {
+  const [isResetConfirmOpen, setIsResetConfirmOpen] = useState(false);
   const lineMap = new Map(lines.map((l) => [l.componentId, l]));
 
   const handleUpdate = (updated: PricingComponent) => {
@@ -27,7 +29,23 @@ export function PricingComponentList({
   };
 
   const handleDelete = (id: string) => {
+    const target = components.find((c) => c.id === id);
+    const targetIndex = components.findIndex((c) => c.id === id);
     onChange(components.filter((c) => c.id !== id));
+
+    if (target) {
+      toast.info(`Removed "${target.name || "item"}"`, {
+        action: {
+          label: "Undo",
+          onClick: () => {
+            const restored = [...components];
+            restored.splice(targetIndex, 0, target);
+            onChange(restored);
+            toast.success(`Restored "${target.name || "item"}"`);
+          },
+        },
+      });
+    }
   };
 
   const handleAddComponent = (
@@ -43,12 +61,22 @@ export function PricingComponentList({
       category: preset?.category || "custom",
     };
     onChange([...components, newComponent]);
+    toast.success(`Added "${newComponent.name}"`);
   };
 
-  const handleReset = () => {
-    if (window.confirm("Clear all components to start fresh?")) {
-      onChange([]);
-    }
+  const handleConfirmReset = () => {
+    const previous = [...components];
+    onChange([]);
+    setIsResetConfirmOpen(false);
+    toast.info("All components cleared", {
+      action: {
+        label: "Undo",
+        onClick: () => {
+          onChange(previous);
+          toast.success("Restored components");
+        },
+      },
+    });
   };
 
   const activeCount = components.filter((c) => c.enabled).length;
@@ -72,16 +100,18 @@ export function PricingComponentList({
         </div>
 
         <div className="flex items-center gap-2">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleReset}
-            title="Reset to default structure"
-            className="text-xs text-muted-foreground hover:text-foreground"
-          >
-            <RotateCcw className="h-3.5 w-3.5 mr-1" />
-            Reset
-          </Button>
+          {components.length > 0 && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsResetConfirmOpen(true)}
+              title="Clear all components"
+              className="text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10"
+            >
+              <RotateCcw className="h-3.5 w-3.5 mr-1" />
+              Clear
+            </Button>
+          )}
 
           <Button
             variant="primary"
@@ -217,6 +247,17 @@ export function PricingComponentList({
           </div>
         )}
       </div>
+
+      {/* Proper Radix Confirmation Dialog for Clear/Reset */}
+      <ConfirmDialog
+        open={isResetConfirmOpen}
+        onOpenChange={setIsResetConfirmOpen}
+        title="Clear All Components?"
+        description="This will remove all pricing components from the current session. You can undo this action immediately from the notification."
+        confirmText="Clear Canvas"
+        variant="destructive"
+        onConfirm={handleConfirmReset}
+      />
     </div>
   );
 }

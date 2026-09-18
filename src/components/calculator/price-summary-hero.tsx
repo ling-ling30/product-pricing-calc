@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import { SUPPORTED_CURRENCIES, getCurrencySymbol } from "@/lib/currencies";
 import { TrendingUp, DollarSign, PieChart, Coins } from "lucide-react";
+import { toast } from "sonner";
 
 interface PriceSummaryHeroProps {
   summary: CalculationSummary;
@@ -25,6 +26,12 @@ export function PriceSummaryHero({
 }: PriceSummaryHeroProps) {
   const quickCurrencies = ["USD", "IDR", "EUR", "GBP", "SGD"];
   const isOtherCurrency = !quickCurrencies.includes(currency);
+  const handleCurrencySelect = (newCode: string) => {
+    if (newCode && newCode !== currency) {
+      onCurrencyChange(newCode);
+      toast.info(`Base currency set to ${newCode}`);
+    }
+  };
 
   return (
     <Card className="overflow-hidden border-border/80 bg-gradient-to-br from-card via-card to-secondary/30 shadow-md">
@@ -53,7 +60,7 @@ export function PriceSummaryHero({
                 <button
                   key={c}
                   type="button"
-                  onClick={() => onCurrencyChange(c)}
+                  onClick={() => handleCurrencySelect(c)}
                   className={`px-2 py-1 text-xs font-medium rounded-md transition-all duration-160 active:scale-95 ${
                     currency === c
                       ? "bg-primary text-primary-foreground shadow-sm font-semibold"
@@ -68,7 +75,7 @@ export function PriceSummaryHero({
               <select
                 value={isOtherCurrency ? currency : ""}
                 onChange={(e) => {
-                  if (e.target.value) onCurrencyChange(e.target.value);
+                  if (e.target.value) handleCurrencySelect(e.target.value);
                 }}
                 className={`px-2 py-1 text-xs font-medium rounded-md bg-transparent border-0 cursor-pointer focus:outline-none transition-colors ${
                   isOtherCurrency

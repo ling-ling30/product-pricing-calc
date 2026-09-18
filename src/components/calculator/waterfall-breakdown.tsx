@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import { Copy, Check, Layers } from "lucide-react";
+import { toast } from "sonner";
 
 interface WaterfallBreakdownProps {
   summary: CalculationSummary;
@@ -49,6 +50,9 @@ export function WaterfallBreakdown({
 
     navigator.clipboard.writeText(text);
     setCopied(true);
+    toast.success("Price breakdown copied to clipboard", {
+      description: "Formatted commercial quote ready to paste.",
+    });
     setTimeout(() => setCopied(false), 2000);
   };
 

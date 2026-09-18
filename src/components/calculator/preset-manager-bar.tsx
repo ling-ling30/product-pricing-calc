@@ -4,11 +4,20 @@ import React, { useState } from "react";
 import { CalculationPreset, PricingComponent } from "@/types/calculator";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Dialog } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Select } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { SUPPORTED_CURRENCIES } from "@/lib/currencies";
 import { Bookmark, Save, Plus, Trash2, Cloud, HardDrive, Coins } from "lucide-react";
+import { toast } from "sonner";
 
 interface PresetManagerBarProps {
   presets: CalculationPreset[];
@@ -36,6 +45,7 @@ export function PresetManagerBar({
   onCurrencyChange,
 }: PresetManagerBarProps) {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const [presetName, setPresetName] = useState("");
   const [presetNotes, setPresetNotes] = useState("");
 
@@ -49,11 +59,15 @@ export function PresetManagerBar({
 
   const handleConfirmSave = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!presetName.trim()) return;
+    if (!presetName.trim()) {
+      toast.error("Please enter a valid preset name");
+      return;
+    }
 
+    const savedName = presetName.trim();
     const newPreset: CalculationPreset = {
       id: `preset-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
-      name: presetName.trim(),
+      name: savedName,
       currency,
       components: currentComponents,
       notes: presetNotes.trim(),
@@ -63,6 +77,38 @@ export function PresetManagerBar({
 
     onSavePreset(newPreset);
     setIsDialogOpen(false);
+    toast.success(`Preset "${savedName}" saved successfully`, {
+      description: `${currentComponents.length} cost component(s) saved in ${currency}.`,
+    });
+  };
+
+  const handleConfirmDelete = () => {
+    if (!activePreset) return;
+    const deletedName = activePreset.name;
+    onDeletePreset(activePreset.id);
+    setIsDeleteDialogOpen(false);
+    toast.success(`Preset "${deletedName}" deleted`);
+  };
+
+  const handleSelect = (preset: CalculationPreset) => {
+    onSelectPreset(preset);
+    toast.info(`Loaded preset: "${preset.name}"`, {
+      description: `Switched currency to ${preset.currency || currency}.`,
+    });
+  };
+
+  const handleNew = () => {
+    onNewScratchpad();
+    toast.info("Started fresh blank canvas", {
+      description: "Ready for a new product calculation.",
+    });
+  };
+
+  const handleCurrencySelect = (newCurrency: string) => {
+    if (onCurrencyChange) {
+      onCurrencyChange(newCurrency);
+      toast.info(`Base currency changed to ${newCurrency}`);
+    }
   };
 
   return (
@@ -76,7 +122,7 @@ export function PresetManagerBar({
               value={activePresetId || ""}
               onChange={(e) => {
                 const found = presets.find((p) => p.id === e.target.value);
-                if (found) onSelectPreset(found);
+                if (found) handleSelect(found);
               }}
             >
               <option value="" disabled>
@@ -112,7 +158,7 @@ export function PresetManagerBar({
               <Coins className="h-3.5 w-3.5 text-muted-foreground hidden sm:block" />
               <select
                 value={currency}
-                onChange={(e) => onCurrencyChange(e.target.value)}
+                onChange={(e) => handleCurrencySelect(e.target.value)}
                 className="h-8 text-xs font-semibold px-2 py-1 rounded-md bg-secondary/80 border border-border/60 text-foreground cursor-pointer focus:outline-none focus:ring-1 focus:ring-primary transition-all duration-160"
                 title="Select Base Currency"
               >
@@ -128,7 +174,7 @@ export function PresetManagerBar({
           <Button
             variant="outline"
             size="sm"
-            onClick={onNewScratchpad}
+            onClick={handleNew}
             title="Start a blank calculator session"
             className="text-xs"
           >
@@ -149,7 +195,7 @@ export function PresetManagerBar({
           {activePreset && (
             <button
               type="button"
-              onClick={() => onDeletePreset(activePreset.id)}
+              onClick={() => setIsDeleteDialogOpen(true)}
               className="p-2 rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors active:scale-90"
               title="Delete this saved preset"
             >
@@ -159,53 +205,68 @@ export function PresetManagerBar({
         </div>
       </div>
 
-      {/* Save Preset Dialog */}
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        title="Save Calculation Configuration"
-        description={`Save your component stack and pricing parameters (${currency}) for future quotes.`}
-      >
-        <form onSubmit={handleConfirmSave} className="space-y-4 mt-4">
-          <div>
-            <label className="block text-xs font-medium text-foreground mb-1.5">
-              Preset Name
-            </label>
-            <Input
-              value={presetName}
-              onChange={(e) => setPresetName(e.target.value)}
-              placeholder="e.g. Specialty Washed Arabica 25% Margin"
-              required
-              autoFocus
-            />
-          </div>
+      {/* Proper Radix Save Preset Dialog */}
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Save Calculation Configuration</DialogTitle>
+            <DialogDescription>
+              Save your component stack and pricing parameters ({currency}) for future quotes.
+            </DialogDescription>
+          </DialogHeader>
 
-          <div>
-            <label className="block text-xs font-medium text-foreground mb-1.5">
-              Description / Notes (Optional)
-            </label>
-            <Input
-              value={presetNotes}
-              onChange={(e) => setPresetNotes(e.target.value)}
-              placeholder="Notes on supplier terms, forwarder, packaging..."
-            />
-          </div>
+          <form onSubmit={handleConfirmSave} className="space-y-4 mt-2">
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-1.5">
+                Preset Name
+              </label>
+              <Input
+                value={presetName}
+                onChange={(e) => setPresetName(e.target.value)}
+                placeholder="e.g. Specialty Washed Arabica 25% Margin"
+                required
+                autoFocus
+              />
+            </div>
 
-          <div className="flex justify-end gap-2 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setIsDialogOpen(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" variant="primary" size="sm">
-              Confirm & Save
-            </Button>
-          </div>
-        </form>
+            <div>
+              <label className="block text-xs font-medium text-foreground mb-1.5">
+                Description / Notes (Optional)
+              </label>
+              <Input
+                value={presetNotes}
+                onChange={(e) => setPresetNotes(e.target.value)}
+                placeholder="Notes on supplier terms, forwarder, packaging..."
+              />
+            </div>
+
+            <DialogFooter className="mt-4">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => setIsDialogOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" variant="primary" size="sm">
+                Confirm & Save
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
       </Dialog>
+
+      {/* Proper Radix Confirm Dialog for Preset Deletion */}
+      <ConfirmDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+        title="Delete Preset"
+        description={`Are you sure you want to delete "${activePreset?.name}"? This action cannot be undone.`}
+        confirmText="Delete Preset"
+        variant="destructive"
+        onConfirm={handleConfirmDelete}
+      />
     </>
   );
 }
